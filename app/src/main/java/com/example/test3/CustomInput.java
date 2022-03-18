@@ -49,9 +49,9 @@ public class CustomInput extends AppCompatActivity implements View.OnClickListen
 
         // send 图片按钮
         final ImageButton sendButton = (ImageButton) findViewById(R.id.send_button);
-        final ImageButton backButton = (ImageButton) findViewById(R.id.back_to_home);
+
         sendButton.setOnClickListener(this);
-        backButton.setOnClickListener(this);
+
 
         // 加载缓存文件中的文字信息
         String inputText = load();
