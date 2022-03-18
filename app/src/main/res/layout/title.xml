@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+
+    <ImageButton
+        android:id="@+id/title_menu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:background="#FFFFFF"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:text="Menu" />
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="BooKee"
+        android:textColor="@color/black"
+        android:textSize="25sp" />
+
+    <ImageButton
+        android:id="@+id/title_search"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="16dp"
+        android:background="#F8F8F8"
+        android:src="@android:drawable/ic_menu_search"
+        android:text="search" />
+
+
+
+</LinearLayout>
