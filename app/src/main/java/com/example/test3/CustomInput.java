@@ -84,8 +84,7 @@ public class CustomInput extends AppCompatActivity implements View.OnClickListen
             setResult(Activity.RESULT_OK, intent);
             finish();
         }else if (v.getId() == R.id.back_to_home){
-            Intent intent = new Intent(this,Home.class);
-            startActivity(intent);
+
         }
     }
 

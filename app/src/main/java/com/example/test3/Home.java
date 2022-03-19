@@ -51,7 +51,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener , Co
         fab.setOnClickListener(this);
 
         // 初始化textList的数据
-        textList = Text.getDefalt();
+        textList = Text.getDefault();
 
         ListView listView = (ListView) findViewById(R.id.list_view_text);
         TextAdapter adapter = new TextAdapter(Home.this, R.layout.text_item, textList);
@@ -63,7 +63,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener , Co
         // 点击list中的项
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Text text = textList.get(position);
-            // 点击响应的内容
+             // 点击响应的内容
 //            Toast.makeText(Home.this, text.getContent(), Toast.LENGTH_SHORT).show();
         });
 
@@ -111,9 +111,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener , Co
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             String inputText = data.getStringExtra("text");
-//            Text text = new Text(inputText);
-//            textList.add(text);
-//            listView.setAdapter(adapter);
+            Text text = new Text(inputText);
+            textList.add(text);
+            ListView listView = (ListView) findViewById(R.id.list_view_text);
+            TextAdapter adapter = new TextAdapter(Home.this, R.layout.text_item, textList);
+            listView.setAdapter(adapter);
         }
     }
 
@@ -139,8 +141,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener , Co
                     case R.id.option_delete:
 
                         break;
-                    case R.id.option_share:
+                    case R.id.option_copy:
 
+                        Toast.makeText(getApplicationContext(), "Copy complete", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;

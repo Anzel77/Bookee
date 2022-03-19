@@ -26,6 +26,7 @@ public class Text {
         this.imageId = imageId;
     }
 
+
     public Text(String content, int imageId) {
         this.content = content;
         this.imageId = imageId;
@@ -36,6 +37,11 @@ public class Text {
         this.tag = tag;
     }
 
+    public Text(String content, int imageId, String tag) {
+        this.content = content;
+        this.imageId = imageId;
+        this.tag = tag;
+    }
 
     public void setContent(String content) {
         this.content = content;
@@ -62,7 +68,7 @@ public class Text {
         this.tag = tag;
     }
 
-    public static ArrayList<Text> getDefalt() {
+    public static ArrayList<Text> getDefault() {
         ArrayList<Text> textList = new ArrayList<Text>();
         textList.add(new Text("英雄这种东西，当你想成为英雄的时候，你就已经失去了成为英雄的资格了。", "#所闻"));
         textList.add(new Text("两个人笑的是玩笑，一个人笑的是挖苦。", "#心灵砒霜"));
@@ -70,7 +76,5 @@ public class Text {
         textList.add(new Text("人的心是散乱的", "#心灵砒霜"));
         return textList;
     }
-
-
 
 }

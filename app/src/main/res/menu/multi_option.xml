@@ -10,6 +10,6 @@
         android:title="Delete" />
 
     <item
-        android:id="@+id/option_share"
-        android:title="Share"/>
+        android:id="@+id/option_copy"
+        android:title="Copy"/>
 </menu>

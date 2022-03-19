@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">BookeeTest3</string>
-    <string name="ok">ok</string>
+    <string name="OK">ok</string>
     <string name="cancel">cancel</string>
-    <string name="edit_hint">请输入你想在的想法……</string>
+    <string name="edit_hint">请输入你现在的想法……</string>
     <string name="send_message_you_edited">send message you edited.</string>
     <string name="advice_add">You have no notes.\nClick the button below to add a note.</string>
+    <string name="add_content">add_content</string>
 </resources>
