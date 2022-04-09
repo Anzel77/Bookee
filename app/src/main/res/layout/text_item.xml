@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10dp" />
+        android:layout_margin="5dp" />
 
     <!--显示文本信息-->
     <TextView
@@ -20,15 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10dp"/>
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/tag_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/teal_700"/>
+        android:textSize="12sp"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/teal_700"
+        tools:ignore="SmallSp" />
 
 
 

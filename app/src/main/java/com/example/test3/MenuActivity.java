@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 /**
  * @author Karl
  */
-public class Menu extends AppCompatActivity implements View.OnClickListener {
+public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @Override
@@ -31,6 +31,8 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
 
         final Button searchOnWebButton = findViewById(R.id.button_search_on_web);
         searchOnWebButton.setOnClickListener(this);
+
+
 
     }
 

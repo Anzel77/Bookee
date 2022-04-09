@@ -1,14 +1,15 @@
 package com.example.test3;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -23,15 +24,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.time.LocalDate;
-import java.util.List;
 
 /**
  * @author Karl
  */
-public class CustomInput extends AppCompatActivity implements View.OnClickListener {
+public class CustomInputActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editText;
+    private DatabaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,6 @@ public class CustomInput extends AppCompatActivity implements View.OnClickListen
 
         // send 图片按钮
         final ImageButton sendButton = (ImageButton) findViewById(R.id.send_button);
-
         sendButton.setOnClickListener(this);
 
 
@@ -76,13 +76,17 @@ public class CustomInput extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.send_button){
-            String inputText = editText.getText().toString();
-            Intent intent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putString("text",inputText);
-            intent.putExtras(bundle);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            String inputText = editText.getText().toString().trim();
+            if (!TextUtils.isEmpty(inputText)){
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("text",inputText);
+                intent.putExtras(bundle);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+            editText.setText(null);
+
         }else if (v.getId() == R.id.back_to_home){
 
         }

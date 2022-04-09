@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +15,8 @@
         android:layout_marginLeft="16dp"
         android:background="#FFFFFF"
         android:src="@android:drawable/ic_menu_sort_by_size"
-        android:text="Menu" />
+        android:text="Menu"
+        app:tint="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/title_text"
@@ -33,9 +35,11 @@
         android:layout_height="25dp"
         android:layout_gravity="center"
         android:layout_marginRight="16dp"
-        android:background="#F8F8F8"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
         android:src="@android:drawable/ic_menu_search"
-        android:text="search" />
+        android:text="search"
+        app:tint="@color/colorPrimaryDark" />
 
 
 

@@ -7,9 +7,39 @@ import java.util.ArrayList;
  * @author Karl
  */
 public class Text {
+    private int textId;
     private String content;
     private int imageId;
     private String tag;
+
+    public Text(int textId, String content, int imageId, String tag) {
+        this.textId = textId;
+        this.content = content;
+        this.imageId = imageId;
+        this.tag = tag;
+    }
+
+    public Text(int textId, String content) {
+        this.textId = textId;
+        this.content = content;
+    }
+
+    public Text(int textId, String content, String tag) {
+        this.textId = textId;
+        this.content = content;
+        this.tag = tag;
+    }
+
+    public Text(int textId, int imageId) {
+        this.textId = textId;
+        this.imageId = imageId;
+    }
+
+    public Text(int textId, int imageId, String tag) {
+        this.textId = textId;
+        this.imageId = imageId;
+        this.tag = tag;
+    }
 
     /**
      * @param content 输入的文字内容
@@ -43,17 +73,12 @@ public class Text {
         this.tag = tag;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public int getTextId() {
+        return textId;
     }
 
     public String getContent() {
         return content;
-    }
-
-
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
     }
 
     public int getImageId() {
@@ -64,9 +89,6 @@ public class Text {
         return tag;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
     public static ArrayList<Text> getDefault() {
         ArrayList<Text> textList = new ArrayList<Text>();
