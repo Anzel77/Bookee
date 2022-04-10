@@ -68,11 +68,6 @@ public class TextAdapter extends ArrayAdapter<Text>{
         return convertView;
     }
 
-    public void addItem(Text text){
-
-    }
-
-
     /**
      * 定义静态内部类 ViewHolder ，用于复用布局
      */

@@ -2,21 +2,29 @@ package com.example.test3;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 
 /**
  * @author Karl
  */
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
+    DatabaseHelper dbHelper;
+    private ArrayList<String> tagList = null;
+    private static final String DB_NAME = "bookee.db";
+    private static final int DB_VERSION = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,19 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         final Button searchOnWebButton = findViewById(R.id.button_search_on_web);
         searchOnWebButton.setOnClickListener(this);
 
+        dbHelper = new DatabaseHelper(this, DB_NAME, null, DB_VERSION);
+        dbHelper.getWritableDatabase();
+
+        // Model
+        tagList = new ArrayList<>();
+        initTagList();
+
+        // View
+        ListView listView = (ListView) findViewById(R.id.list_view_tag);
+
+        // Controller
+        TagAdapter adapter = new TagAdapter(MenuActivity.this, R.layout.tag, tagList);
+        listView.setAdapter(adapter);
 
 
     }
@@ -45,6 +66,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
 
     /**
      * 显示菜单
@@ -80,5 +102,17 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         });
         popupMenu.show(); // 显示点按菜单
+    }
+
+    void initTagList() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DISTINCT tag_content FROM content", null);
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String tag = cursor.getString(cursor.getColumnIndex("tag_content"));
+                tagList.add(tag);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
     }
 }

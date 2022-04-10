@@ -41,35 +41,8 @@ public class Text {
         this.tag = tag;
     }
 
-    /**
-     * @param content 输入的文字内容
-     */
-
-    public Text(String content) {
-        this.content = content;
-    }
-
-    /**
-     * @param imageId 输入的如片id
-     */
-    public Text(int imageId) {
-        this.imageId = imageId;
-    }
-
-
-    public Text(String content, int imageId) {
-        this.content = content;
-        this.imageId = imageId;
-    }
-
     public Text(String content, String tag) {
         this.content = content;
-        this.tag = tag;
-    }
-
-    public Text(String content, int imageId, String tag) {
-        this.content = content;
-        this.imageId = imageId;
         this.tag = tag;
     }
 

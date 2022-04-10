@@ -31,7 +31,6 @@ import java.io.OutputStreamWriter;
 public class CustomInputActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editText;
-    private DatabaseHelper dbHelper;
 
 
     @Override

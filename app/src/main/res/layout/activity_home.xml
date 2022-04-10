@@ -29,11 +29,9 @@
         <!--引入自定义菜单栏布局-->
         <include layout="@layout/title" />
 
-<!--        <include-->
-<!--            android:id="@+id/list_view_empty"-->
-<!--            layout="@layout/text_empty"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_width="match_parent" />-->
+        <include
+            android:id="@+id/list_view_empty"
+            layout="@layout/text_empty" />
 
         <ListView
             android:id="@+id/list_view_text"

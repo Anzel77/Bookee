@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Karl
@@ -31,6 +33,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     DatabaseHelper dbHelper;
     private ArrayList<Text> textList = null;
+    private static final String DB_NAME = "bookee.db";
+    private static final int DB_VERSION = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,32 +50,32 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //实例化按钮
         final ImageButton menuButton = findViewById(R.id.title_menu);
         final ImageButton searchButton = findViewById(R.id.title_search);
-        final FloatingActionButton fab = findViewById(R.id.float_button_add);
+        final FloatingActionButton addFloatButton = findViewById(R.id.float_button_add);
 
         //按钮监听器
         menuButton.setOnClickListener(this);
         searchButton.setOnClickListener(this);
-        fab.setOnClickListener(this);
-
-        // 创建Room数据库实例
-//        AppDatabase db = Room.databaseBuilder(this, AppDatabase.class, "bookee").build();
-//        ContentDao contentDao = db.contentDao();
-//        List<Content> contentList = contentDao.getAll();
+        addFloatButton.setOnClickListener(this);
 
         // 创建SQLite数据库
-        dbHelper = new DatabaseHelper(this, "bookee.db", null, 3);
+        dbHelper = new DatabaseHelper(this, DB_NAME, null, DB_VERSION);
         dbHelper.getWritableDatabase();
 
         // 初始化textList的数据
-        textList = Text.getDefault();
+        // Model
+        textList = new ArrayList<>();
+//        textList = Text.getDefault();
         initTextList();
+        Collections.reverse(textList);
 
-
+        // View
         ListView listView = findViewById(R.id.list_view_text);
+        View listviewEmpty = findViewById(R.id.list_view_empty);
+        listView.setEmptyView(listviewEmpty);
         TextAdapter adapter = new TextAdapter(HomeActivity.this, R.layout.text_item, textList);
-//        TextAdapter adapter = new TextAdapter(HomeActivity.this, R.layout.text_item, contentList);
 
         // 构建 listView 与 textList 的关联
+        // Controller
         listView.setAdapter(adapter);
 
         // 点击list中的项
@@ -99,11 +103,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.title_search:
 
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("text_content", "Compromise is not a dirty word.");
-                values.put("tag_content", "#心灵砒霜");
-                db.insert("content", null, values);
-                values.clear();
+                Cursor cursor = db.rawQuery("SELECT DISTINCT tag_content FROM content", null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        @SuppressLint("Range") String tag = cursor.getString(cursor.getColumnIndex("tag_content"));
+                        Log.d("tag", tag);
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
 
                 break;
 
@@ -125,16 +132,73 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+
+    /**
+     * 显示弹窗选项
+     */
+    private void showPopupMenu(View view, Text text) {
+        // View当前PopupMenu显示的相对View的位置
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        // menu布局
+        popupMenu.getMenuInflater().inflate(R.menu.multi_option, popupMenu.getMenu());
+        // menu的item点击事件
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                //Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+
+                switch (item.getItemId()) {
+                    case R.id.option_modify:
+
+
+                        break;
+                    case R.id.option_delete:
+                        Integer id = text.getTextId();
+                        dataDelete(id);
+
+                        // 移除textList中的某一项
+                        textList.remove(text);
+                        textListToAdapter();
+                        // 提示删除成功
+                        Toast.makeText(getApplicationContext(), "Delete complete", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.option_copy:
+                        //获取剪贴板管理器：
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        // 创建普通字符型ClipData
+                        ClipData clip = ClipData.newPlainText("BooKee copy", text.getContent());
+                        // 将ClipData内容放到系统剪贴板里。
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(getApplicationContext(), "Copy complete", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show(); // 显示点按菜单
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -160,84 +224,61 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 values.clear();
             }
 
-
-//            Text text = new Text(inputText);
-//            textList.add(text);
-//            ListView listView = (ListView) findViewById(R.id.list_view_text);
-//            TextAdapter adapter = new TextAdapter(HomeActivity.this, R.layout.text_item, textList);
-//            listView.setAdapter(adapter);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM content", null);
+            cursor.moveToLast();
+            @SuppressLint("Range") int textId = cursor.getInt(cursor.getColumnIndex("id_content"));
+            @SuppressLint("Range") String text = cursor.getString(cursor.getColumnIndex("text_content"));
+            @SuppressLint("Range") String tag = cursor.getString(cursor.getColumnIndex("tag_content"));
+            Text textAdd = new Text(textId, text, tag);
+            Collections.reverse(textList);
+            textList.add(textAdd);
+            Collections.reverse(textList);
+            textListToAdapter();
         }
-    }
-
-    /**
-     * 显示弹窗选项
-     */
-    private void showPopupMenu(View view, Text text) {
-        // View当前PopupMenu显示的相对View的位置
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        // menu布局
-        popupMenu.getMenuInflater().inflate(R.menu.multi_option, popupMenu.getMenu());
-        // menu的item点击事件
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                //Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-
-                switch (item.getItemId()) {
-                    case R.id.option_modify:
-
-
-                        break;
-                    case R.id.option_delete:
-                        String id = Integer.toString(text.getTextId());
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        db.delete("content", "id_content = ?", new String[]{id});
-                        Toast.makeText(getApplicationContext(), "Delete complete", Toast.LENGTH_SHORT).show();
-
-                        break;
-                    case R.id.option_copy:
-                        //获取剪贴板管理器：
-                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        // 创建普通字符型ClipData
-                        ClipData clip = ClipData.newPlainText("BooKee copy", text.getContent());
-                        // 将ClipData内容放到系统剪贴板里。
-                        clipboard.setPrimaryClip(clip);
-
-                        Toast.makeText(getApplicationContext(), "Copy complete", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
-
-                }
-
-                return false;
-            }
-        });
-
-        popupMenu.show(); // 显示点按菜单
-
     }
 
     void initTextList() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query("content", null, null, null, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM content", null);
         if (cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int textId = cursor.getInt(cursor.getColumnIndex("id_content"));
                 @SuppressLint("Range") String text = cursor.getString(cursor.getColumnIndex("text_content"));
                 @SuppressLint("Range") String tag = cursor.getString(cursor.getColumnIndex("tag_content"));
-                Text text1 = new Text(textId, text, tag);
-                textList.add(text1);
+                Text textInDatabase = new Text(textId, text, tag);
+                textList.add(textInDatabase);
             } while (cursor.moveToNext());
         }
         cursor.close();
     }
 
-    void addTextList() {
-
+    /**
+     * 连接 listview 和 adapter
+     */
+    void textListToAdapter(){
+        ListView listView = (ListView) findViewById(R.id.list_view_text);
+        TextAdapter adapter = new TextAdapter(HomeActivity.this, R.layout.text_item, textList);
+        listView.setAdapter(adapter);
     }
+
+    /**
+     * 删除数据库中的某一条数据
+     * @param id 需要删除的数据的 id
+     */
+    void dataDelete(Integer id){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+//        db.delete("content", "id_content = ?", new String[]{id.toString()});
+        db.execSQL("DELETE FROM content WHERE id_content = ?", new String[]{id.toString()});
+    }
+
+
+    void dataUpdate(Text text){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("UPDATE content SET text_content = ?, tag_content = ? WHERE personid = ?",
+                new String[]{text.getContent(), text.getTag(), Integer.toString(text.getTextId())});
+    }
+
 
 
 }
