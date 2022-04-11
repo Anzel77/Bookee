@@ -2,12 +2,16 @@
     <string name="app_name">BookeeTest3</string>
     <string name="confirm">confirm</string>
     <string name="cancel">cancel</string>
-    <string name="edit_hint">请输入你现在的想法……</string>
+    <string name="edit_hint">Enter your thoughts……</string>
     <string name="send_message_you_edited">send message you edited.</string>
     <string name="add_content">add_content</string>
     <string name="dialog_text_delete_confirm">Are you sure?</string>
     <string name="dialog_web_search_option">Choose a website</string>
     <string name="advice_add">You have no notes.\nClick the button below to add a note.</string>
-    <string name="advice_tag">You have no notes.\nHere is TAGS PAGE.\nYou can add notes with a tag in the HOME PAGE.\nYour tags will be listed in this page.</string>
+    <string name="advice_tag">Here is TAGS PAGE.\nYou can add notes with a tag in the HOME PAGE.\nYour tags will be listed in this page.\nYou can press button BOOKEE or BACK to jump to HOME PAGE</string>
+    <string name="jump_to_tag_page">Jump to TAG PAGE</string>
+    <string name="menu">Menu</string>
+    <string name="bookee">BooKee</string>
+    <string name="search_dialog">Search Dialog</string>
 
 </resources>

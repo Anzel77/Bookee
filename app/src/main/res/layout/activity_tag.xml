@@ -11,16 +11,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-<!--        <Button-->
-<!--            android:id="@+id/button_search_on_web"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:text="Search books on web"-->
-<!--            tools:ignore="MissingConstraints" />-->
+        <Button
+            android:id="@+id/button_list_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:backgroundTint="#E9EAE8"
+            android:text="bookee"
+            android:textColor="@color/teal_700"
+            tools:ignore="MissingConstraints" />
 
         <include
             android:id="@+id/tag_list_view_empty"

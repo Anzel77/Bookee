@@ -32,6 +32,8 @@ import java.io.OutputStreamWriter;
 public class CustomInputActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editText;
+    private static final int INPUT_RESULT_CODE = 0;
+
 
 
     @Override
@@ -93,7 +95,7 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
                 Bundle bundle = new Bundle();
                 bundle.putString("text_input",inputText);
                 intent.putExtras(bundle);
-                setResult(Activity.RESULT_OK, intent);
+                setResult(INPUT_RESULT_CODE, intent);
                 finish();
             }
             editText.setText(null);

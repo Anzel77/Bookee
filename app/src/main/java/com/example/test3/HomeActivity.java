@@ -31,10 +31,17 @@ import java.util.Collections;
  */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    DatabaseHelper dbHelper;
-    private ArrayList<Text> textList = null;
     private static final String DB_NAME = "bookee.db";
     private static final int DB_VERSION = 3;
+    private static final int ADD_REQUEST_C = 0;
+    private static final int MODIFY_REQUEST_C = 1;
+    private static final int TAG_FOR_SEARCH_REQUEST_C = 2;
+    private static final int INPUT_RESULT_CODE = 0;
+    private static final int TAG_RESULT_CODE = 1;
+    private static final int TAG_ALL_RESULT_CODE = 2;
+
+    DatabaseHelper dbHelper;
+    private ArrayList<Text> textList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +55,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //实例化按钮
-        final ImageButton menuButton = findViewById(R.id.title_menu);
+        final ImageButton tagButton = findViewById(R.id.title_tag);
         final ImageButton searchButton = findViewById(R.id.title_search);
         final FloatingActionButton addFloatButton = findViewById(R.id.float_button_add);
 
         //按钮监听器
-        menuButton.setOnClickListener(this);
+        tagButton.setOnClickListener(this);
         searchButton.setOnClickListener(this);
         addFloatButton.setOnClickListener(this);
 
@@ -104,13 +111,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.title_search:
                 showSearchOptionDialog();
                 break;
-            case R.id.title_menu:
-                Intent menu = new Intent(HomeActivity.this, TagActivity.class);
-                startActivityForResult(menu, 2);
+            case R.id.title_tag:
+                Intent tag = new Intent(HomeActivity.this, TagActivity.class);
+                startActivityForResult(tag, TAG_FOR_SEARCH_REQUEST_C);
                 break;
             case R.id.float_button_add:
                 Intent editButton = new Intent(HomeActivity.this, CustomInputActivity.class);
-                startActivityForResult(editButton, 0);
+                startActivityForResult(editButton, ADD_REQUEST_C);
                 break;
             default:
                 break;
@@ -182,8 +189,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
-            if (requestCode == 0 || requestCode == 1){
+        if (requestCode == ADD_REQUEST_C || requestCode == MODIFY_REQUEST_C) {
+            if (resultCode == INPUT_RESULT_CODE && data != null) {
                 String inputText = data.getStringExtra("text_input");
                 // 检测tag所在位置
                 int index = inputText.indexOf("\n#");
@@ -208,11 +215,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     values.clear();
                 }
                 lastDataToAdapter();
-            }else if (requestCode == 2){
+            }
+        } else if (requestCode == TAG_FOR_SEARCH_REQUEST_C) {
+            if (resultCode == TAG_RESULT_CODE && data != null) {
                 String tagForSearch = data.getStringExtra("tag_for_search");
                 if (!TextUtils.isEmpty(tagForSearch.trim())) {
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    Cursor cursor = db.rawQuery("SELECT * FROM content WHERE tag_content = ?", new String[]{tagForSearch});
+                    Cursor cursor = db.rawQuery("SELECT * FROM content WHERE tag_content IN (?)", new String[]{tagForSearch});
                     textList.clear();
                     if (cursor.moveToFirst()) {
                         do {
@@ -227,6 +236,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     Collections.reverse(textList);
                     textListToAdapter();
                 }
+            } else if (resultCode == TAG_ALL_RESULT_CODE){
+                textList.clear();
+                initTextList();
+                Collections.reverse(textList);
+                textListToAdapter();
             }
         }
     }
@@ -252,8 +266,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 连接 listview 和 adapter
      */
-    void textListToAdapter(){
-        ListView listView = (ListView) findViewById(R.id.list_view_text);
+    void textListToAdapter() {
+        ListView listView = findViewById(R.id.list_view_text);
         TextAdapter adapter = new TextAdapter(HomeActivity.this, R.layout.text_item, textList);
         listView.setAdapter(adapter);
     }
@@ -261,7 +275,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 将数据库中最后添加的数据传到 textList 中
      */
-    void lastDataToAdapter(){
+    void lastDataToAdapter() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM content", null);
         // 获取最后一组数据
@@ -278,26 +292,27 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 删除数据库中的某一条数据
+     *
      * @param id 需要删除的数据的 id
      */
-    void dataDelete(Integer id){
+    void dataDelete(Integer id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("DELETE FROM content WHERE id_content = ?", new String[]{id.toString()});
     }
 
 
-    void dataUpdate(Text text){
+    void dataUpdate(Text text) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("UPDATE content SET text_content = ?, tag_content = ? WHERE id_content = ?",
                 new String[]{text.getContent(), text.getTag(), Integer.toString(text.getTextId())});
     }
 
-    void showSearchOptionDialog(){
+    void showSearchOptionDialog() {
         DialogFragment searchOnWebDialog = new SearchOptionDialogFragment();
         searchOnWebDialog.show(getSupportFragmentManager(), "search_option");
     }
 
-    void showTextOperateDialog(Text text){
+    void showTextOperateDialog(Text text) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose a operation")
@@ -309,10 +324,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             dataDelete(id);
                             textList.remove(text);
                             textListToAdapter();
-                            String data = text.getContent() + '\n' +text.getTag();
+                            String data = text.getContent() + '\n' + text.getTag();
                             Intent intent = new Intent(this, CustomInputActivity.class);
                             intent.putExtra("text_modify", data);
-                            startActivityForResult(intent, 1);
+                            startActivityForResult(intent, MODIFY_REQUEST_C);
                             break;
                         case 1:
                             dataDelete(id);

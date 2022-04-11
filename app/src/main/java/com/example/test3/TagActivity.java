@@ -1,15 +1,14 @@
 package com.example.test3;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,11 +24,13 @@ public class TagActivity extends AppCompatActivity{
     private ArrayList<String> tagList = null;
     private static final String DB_NAME = "bookee.db";
     private static final int DB_VERSION = 3;
+    private static final int TAG_RESULT_CODE = 1;
+    private static final int TAG_ALL_RESULT_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_tag);
 
         //隐藏系统标题栏
         ActionBar actionBar = getSupportActionBar();
@@ -39,6 +40,16 @@ public class TagActivity extends AppCompatActivity{
 
         dbHelper = new DatabaseHelper(this, DB_NAME, null, DB_VERSION);
         dbHelper.getWritableDatabase();
+
+        final Button listAllButton = (Button) findViewById(R.id.button_list_all);
+        listAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                setResult(TAG_ALL_RESULT_CODE, intent);
+                finish();
+            }
+        });
 
         // Model
         tagList = new ArrayList<>();
@@ -51,7 +62,7 @@ public class TagActivity extends AppCompatActivity{
         listView.setEmptyView(listviewEmpty);
 
         // Controller
-        TagAdapter adapter = new TagAdapter(TagActivity.this, R.layout.tag, tagList);
+        TagAdapter adapter = new TagAdapter(TagActivity.this, R.layout.tag_item, tagList);
         listView.setAdapter(adapter);
 
         // 点击list中的项
@@ -62,11 +73,9 @@ public class TagActivity extends AppCompatActivity{
                 Bundle bundle = new Bundle();
                 bundle.putString("tag_for_search", tag);
                 intent.putExtras(bundle);
-                setResult(Activity.RESULT_OK, intent);
+                setResult(TAG_RESULT_CODE, intent);
                 finish();
             }
-
-
             // 点击响应的内容
 //            Toast.makeText(TagActivity.this, tag, Toast.LENGTH_SHORT).show();
         });
