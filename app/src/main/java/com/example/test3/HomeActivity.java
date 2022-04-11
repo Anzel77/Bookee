@@ -31,16 +31,43 @@ import java.util.Collections;
  */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * 数据库名称
+     */
     private static final String DB_NAME = "bookee.db";
+    /**
+     * 数据库版本号
+     */
     private static final int DB_VERSION = 3;
+    /**
+     * AddButton传输给InputActivity的请求码
+     */
     private static final int ADD_REQUEST_C = 0;
+    /**
+     * OperationDialog中Modify传给InputActivity的请求码
+     */
     private static final int MODIFY_REQUEST_C = 1;
+    /**
+     * TagButton传输给TagActivity的请求码
+     */
     private static final int TAG_FOR_SEARCH_REQUEST_C = 2;
-    private static final int INPUT_RESULT_CODE = 0;
-    private static final int TAG_RESULT_CODE = 1;
-    private static final int TAG_ALL_RESULT_CODE = 2;
+    /**
+     * InputActivity返回给Home的结果码
+     */
+    private static final int INPUT_RESULT_C = 0;
+    /**
+     * TagActivity返回给Home用于搜索特定tag内容的结果码
+     */
+    private static final int TAG_RESULT_C = 1;
+    /**
+     * TagActivity返回给Home用于加载所有数据库内容的结果码
+     */
+    private static final int TAG_ALL_RESULT_C = 2;
 
     DatabaseHelper dbHelper;
+    /**
+     * 存放数据库数据的容器
+     */
     private ArrayList<Text> textList = null;
 
     @Override
@@ -190,7 +217,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_REQUEST_C || requestCode == MODIFY_REQUEST_C) {
-            if (resultCode == INPUT_RESULT_CODE && data != null) {
+            if (resultCode == INPUT_RESULT_C && data != null) {
                 String inputText = data.getStringExtra("text_input");
                 // 检测tag所在位置
                 int index = inputText.indexOf("\n#");
@@ -217,7 +244,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 lastDataToAdapter();
             }
         } else if (requestCode == TAG_FOR_SEARCH_REQUEST_C) {
-            if (resultCode == TAG_RESULT_CODE && data != null) {
+            if (resultCode == TAG_RESULT_C && data != null) {
                 String tagForSearch = data.getStringExtra("tag_for_search");
                 if (!TextUtils.isEmpty(tagForSearch.trim())) {
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -236,7 +263,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     Collections.reverse(textList);
                     textListToAdapter();
                 }
-            } else if (resultCode == TAG_ALL_RESULT_CODE){
+            } else if (resultCode == TAG_ALL_RESULT_C){
                 textList.clear();
                 initTextList();
                 Collections.reverse(textList);
@@ -246,6 +273,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * 初始化textList
      * 将数据库中所有的数据传入textList
      */
     void initTextList() {
@@ -292,7 +320,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 删除数据库中的某一条数据
-     *
      * @param id 需要删除的数据的 id
      */
     void dataDelete(Integer id) {
