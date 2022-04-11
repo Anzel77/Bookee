@@ -7,7 +7,6 @@
     tools:context=".CustomInputActivity">
 
 
-
     <ImageButton
         android:id="@+id/back_to_home"
         android:layout_width="50dp"
@@ -15,11 +14,13 @@
         android:backgroundTint="#FBFBFB"
         android:src="@android:drawable/ic_menu_revert"
         app:tint="@color/colorPrimaryDark"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="back to home" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
@@ -32,9 +33,9 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="#FFFFFF"
+            android:contentDescription="camera"
             android:src="@android:drawable/ic_menu_camera"
-            app:tint="@color/colorPrimaryDark"
-            android:contentDescription="camera" />
+            app:tint="@color/colorPrimaryDark" />
 
         <EditText
             android:id="@+id/input_text"

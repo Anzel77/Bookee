@@ -62,6 +62,17 @@ public class Text {
         return tag;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public static ArrayList<Text> getDefault() {
         ArrayList<Text> textList = new ArrayList<Text>();

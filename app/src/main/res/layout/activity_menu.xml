@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuActivity">
+    tools:context=".TagActivity">
 
 
     <LinearLayout
@@ -11,23 +11,25 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_search_on_web"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:text="Search books on web"
-            tools:ignore="MissingConstraints" />
+<!--        <Button-->
+<!--            android:id="@+id/button_search_on_web"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginRight="16dp"-->
+<!--            android:text="Search books on web"-->
+<!--            tools:ignore="MissingConstraints" />-->
 
+        <include
+            android:id="@+id/tag_list_view_empty"
+            layout="@layout/tag_empty" />
 
         <ListView
             android:id="@+id/list_view_tag"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"/>
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>

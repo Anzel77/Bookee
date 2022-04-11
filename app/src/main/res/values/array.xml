@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="web_search_option">
+        <item>Gutenberg</item>
+        <item>Z library</item>
+        <item>书格</item>
+    </string-array>
+    
+    <string-array name="text_operate_option">
+        <item>Modify</item>
+        <item>Delete</item>
+        <item>Copy</item>
+    </string-array>
+    
+</resources>

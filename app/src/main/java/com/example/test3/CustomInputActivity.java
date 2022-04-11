@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -47,10 +48,12 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
         // 实例化EditText
         editText = (EditText) findViewById(R.id.input_text);
 
+        final ImageButton backToHome = (ImageButton) findViewById(R.id.back_to_home);
+        backToHome.setOnClickListener(this);
+
         // send 图片按钮
         final ImageButton sendButton = (ImageButton) findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
-
 
         // 加载缓存文件中的文字信息
         String inputText = load();
@@ -63,7 +66,16 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
 //            Toast.makeText(this, "Restoring succeeded", Toast.LENGTH_SHORT).show();
         }
 
+        Intent intent = getIntent();
+        String textModify = intent.getStringExtra("text_modify");
+        if (!TextUtils.isEmpty(textModify)) {
+            editText.setText(textModify);
+            editText.setSelection(textModify.length());
+        }
+
+        // 显示虚拟键盘
         showSoftInputFromWindow(this,editText);
+
     }
 
 
@@ -79,7 +91,7 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
             if (!TextUtils.isEmpty(inputText)){
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putString("text",inputText);
+                bundle.putString("text_input",inputText);
                 intent.putExtras(bundle);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -87,7 +99,7 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
             editText.setText(null);
 
         }else if (v.getId() == R.id.back_to_home){
-
+            this.finish();
         }
     }
 
@@ -110,7 +122,7 @@ public class CustomInputActivity extends AppCompatActivity implements View.OnCli
      * @param inputText EditText输入的文字信息
      */
     public void bufferContent(String inputText) {
-        FileOutputStream out = null;
+        FileOutputStream out;
         BufferedWriter bufferedWriter = null;
         try {
             out = openFileOutput("text_data_buffered", Context.MODE_PRIVATE);
