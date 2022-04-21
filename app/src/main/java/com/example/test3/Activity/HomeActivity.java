@@ -1,4 +1,4 @@
-package com.example.test3;
+package com.example.test3.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -10,9 +10,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,6 +23,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.test3.Adapter.TextAdapter;
+import com.example.test3.Database.DatabaseHelper;
+import com.example.test3.R;
+import com.example.test3.DialogFrament.SearchOptionDialogFragment;
+import com.example.test3.Entity.Text;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -31,40 +38,17 @@ import java.util.Collections;
  */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /**
-     * 数据库名称
-     */
     private static final String DB_NAME = "bookee.db";
-    /**
-     * 数据库版本号
-     */
     private static final int DB_VERSION = 3;
-    /**
-     * AddButton传输给InputActivity的请求码
-     */
     private static final int ADD_REQUEST_C = 0;
-    /**
-     * OperationDialog中Modify传给InputActivity的请求码
-     */
     private static final int MODIFY_REQUEST_C = 1;
-    /**
-     * TagButton传输给TagActivity的请求码
-     */
     private static final int TAG_FOR_SEARCH_REQUEST_C = 2;
-    /**
-     * InputActivity返回给Home的结果码
-     */
     private static final int INPUT_RESULT_C = 0;
-    /**
-     * TagActivity返回给Home用于搜索特定tag内容的结果码
-     */
     private static final int TAG_RESULT_C = 1;
-    /**
-     * TagActivity返回给Home用于加载所有数据库内容的结果码
-     */
     private static final int TAG_ALL_RESULT_C = 2;
 
     DatabaseHelper dbHelper;
+
     /**
      * 存放数据库数据的容器
      */
@@ -166,53 +150,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
     }
 
-
-//    /**
-//     * 显示弹窗选项
-//     */
-//    private void showPopupMenu(View view, Text text) {
-//        // View当前PopupMenu显示的相对View的位置
-//        PopupMenu popupMenu = new PopupMenu(this, view);
-//        // menu布局
-//        popupMenu.getMenuInflater().inflate(R.menu.multi_option, popupMenu.getMenu());
-//        // menu的item点击事件
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @SuppressLint("NonConstantResourceId")
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                //Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-//                switch (item.getItemId()) {
-//                    case R.id.option_modify:
-//
-//                        break;
-//                    case R.id.option_delete:
-//                        Integer id = text.getTextId();
-//                        dataDelete(id);
-//                        // 移除textList中的某一项
-//                        textList.remove(text);
-//                        textListToAdapter();
-//                        // 提示删除成功
-//                        Toast.makeText(getApplicationContext(), "Delete complete", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case R.id.option_copy:
-//                        //获取剪贴板管理器：
-//                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-//                        // 创建普通字符型ClipData
-//                        ClipData clip = ClipData.newPlainText("BooKee copy", text.getContent());
-//                        // 将ClipData内容放到系统剪贴板里。
-//                        clipboard.setPrimaryClip(clip);
-//                        Toast.makeText(getApplicationContext(), "Copy complete", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-//        popupMenu.show(); // 显示点按菜单
-//    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -248,7 +185,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 String tagForSearch = data.getStringExtra("tag_for_search");
                 if (!TextUtils.isEmpty(tagForSearch.trim())) {
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    Cursor cursor = db.rawQuery("SELECT * FROM content WHERE tag_content IN (?)", new String[]{tagForSearch});
+                    Cursor cursor = db.rawQuery(
+                            "SELECT * FROM content WHERE tag_content IN (?)",
+                            new String[]{tagForSearch}
+                    );
                     textList.clear();
                     if (cursor.moveToFirst()) {
                         do {
@@ -278,7 +218,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      */
     void initTextList() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM content", null);
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM content",
+                null
+        );
         if (cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int textId = cursor.getInt(cursor.getColumnIndex("id_content"));
@@ -301,11 +244,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * 将数据库中最后添加的数据传到 textList 中
+     * 将数据库中最后添加的数据传到textList中，并显示在listView中
      */
     void lastDataToAdapter() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM content", null);
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery(
+                "SELECT * FROM content",
+                null
+        );
         // 获取最后一组数据
         cursor.moveToLast();
         @SuppressLint("Range") int textId = cursor.getInt(cursor.getColumnIndex("id_content"));
@@ -324,14 +270,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      */
     void dataDelete(Integer id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM content WHERE id_content = ?", new String[]{id.toString()});
+        db.execSQL(
+                "DELETE FROM content WHERE id_content = ?",
+                new String[]{id.toString()}
+        );
     }
 
 
     void dataUpdate(Text text) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("UPDATE content SET text_content = ?, tag_content = ? WHERE id_content = ?",
-                new String[]{text.getContent(), text.getTag(), Integer.toString(text.getTextId())});
+        db.execSQL(
+                "UPDATE content SET text_content = ?, tag_content = ? WHERE id_content = ?",
+                new String[]{
+                        text.getContent(),
+                        text.getTag(),
+                        Integer.toString(text.getTextId())
+                }
+        );
     }
 
     void showSearchOptionDialog() {
@@ -381,4 +336,49 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alert.show();
     }
 
+
+    /**
+     * 显示弹窗选项
+     */
+    private void showPopupMenu(View view, Text text) {
+        // View当前PopupMenu显示的相对View的位置
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        // menu布局
+        popupMenu.getMenuInflater().inflate(R.menu.multi_option, popupMenu.getMenu());
+        // menu的item点击事件
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                switch (item.getItemId()) {
+                    case R.id.option_modify:
+
+                        break;
+                    case R.id.option_delete:
+                        Integer id = text.getTextId();
+                        dataDelete(id);
+                        // 移除textList中的某一项
+                        textList.remove(text);
+                        textListToAdapter();
+                        // 提示删除成功
+                        Toast.makeText(getApplicationContext(), "Delete complete", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.option_copy:
+                        //获取剪贴板管理器：
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        // 创建普通字符型ClipData
+                        ClipData clip = ClipData.newPlainText("BooKee copy", text.getContent());
+                        // 将ClipData内容放到系统剪贴板里。
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(getApplicationContext(), "Copy complete", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+        popupMenu.show(); // 显示点按菜单
+    }
 }

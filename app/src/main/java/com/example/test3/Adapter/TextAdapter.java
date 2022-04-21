@@ -1,4 +1,4 @@
-package com.example.test3;
+package com.example.test3.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.test3.R;
+import com.example.test3.Entity.Text;
+
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Karl

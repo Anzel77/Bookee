@@ -1,10 +1,12 @@
-package com.example.test3;
+package com.example.test3.DAO;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.example.test3.Entity.Content;
 
 import java.util.List;
 

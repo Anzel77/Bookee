@@ -1,4 +1,4 @@
-package com.example.test3;
+package com.example.test3.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.widget.ListView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.test3.Adapter.TagAdapter;
+import com.example.test3.Database.DatabaseHelper;
+import com.example.test3.R;
+
 import java.util.ArrayList;
 
 /**
@@ -21,6 +25,7 @@ import java.util.ArrayList;
 public class TagActivity extends AppCompatActivity{
 
     DatabaseHelper dbHelper;
+
     private ArrayList<String> tagList = null;
     private static final String DB_NAME = "bookee.db";
     private static final int DB_VERSION = 3;
@@ -42,13 +47,10 @@ public class TagActivity extends AppCompatActivity{
         dbHelper.getWritableDatabase();
 
         final Button listAllButton = (Button) findViewById(R.id.button_list_all);
-        listAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                setResult(TAG_ALL_RESULT_CODE, intent);
-                finish();
-            }
+        listAllButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            setResult(TAG_ALL_RESULT_CODE, intent);
+            finish();
         });
 
         // Model
@@ -79,12 +81,14 @@ public class TagActivity extends AppCompatActivity{
             // 点击响应的内容
 //            Toast.makeText(TagActivity.this, tag, Toast.LENGTH_SHORT).show();
         });
-
     }
 
     void initTagList() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT DISTINCT tag_content FROM content WHERE tag_content IS NOT NULL", null);
+        Cursor cursor = db.rawQuery(
+                "SELECT DISTINCT tag_content FROM content WHERE tag_content IS NOT NULL",
+                null
+        );
         if (cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") String tag = cursor.getString(cursor.getColumnIndex("tag_content"));

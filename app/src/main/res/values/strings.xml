@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookeeTest3</string>
+    <string name="app_name">BooKeeTest3</string>
     <string name="confirm">confirm</string>
     <string name="cancel">cancel</string>
     <string name="edit_hint">Enter your thoughts……</string>
@@ -7,11 +7,23 @@
     <string name="add_content">add_content</string>
     <string name="dialog_text_delete_confirm">Are you sure?</string>
     <string name="dialog_web_search_option">Choose a website</string>
-    <string name="advice_add">You have no notes.\nClick the button below to add a note.</string>
-    <string name="advice_tag">Here is TAGS PAGE.\nYou can add notes with a tag in the HOME PAGE.\nYour tags will be listed in this page.\nYou can press button BOOKEE or BACK to jump to HOME PAGE</string>
+    <string name="advice_add">
+        You have no notes.\n
+        Click the button below to add a note.\n
+        Adding a tag with line breaks and \'#\'.
+    </string>
+    <string name="advice_tag">
+        Here is TAGS PAGE.\n
+        You can add notes with a tag in the HOME PAGE.\n
+        Your tags will be listed in this page.\n
+        You can press button BOOKEE or BACK to back to HOME PAGE
+    </string>
     <string name="jump_to_tag_page">Jump to TAG PAGE</string>
     <string name="menu">Menu</string>
     <string name="bookee">BooKee</string>
     <string name="search_dialog">Search Dialog</string>
+    <string name="back_to_home">back to home</string>
+    <string name="image_input">image_input</string>
+    <string name="delete">delete</string>
 
 </resources>

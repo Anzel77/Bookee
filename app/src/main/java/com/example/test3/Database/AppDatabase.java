@@ -1,7 +1,10 @@
-package com.example.test3;
+package com.example.test3.Database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+
+import com.example.test3.DAO.ContentDao;
+import com.example.test3.Entity.Content;
 
 @Database(entities= {Content.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {

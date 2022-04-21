@@ -1,13 +1,10 @@
-package com.example.test3;
+package com.example.test3.Entity;
 
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author Karl
